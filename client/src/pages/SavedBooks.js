@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_ME } from '../utils/queries'
 import { REMOVE_BOOK } from '../utils/mutations'
 
@@ -24,7 +24,7 @@ const SavedBooks = () => {
 
     try {
       const { data } = await removeBook({
-        variables:{bookId },
+        variables: { bookId: bookId},
  });
       removeBookId(bookId);
     } catch (err) {
@@ -46,12 +46,12 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks.length
+          {userData.savedBooks
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <CardColumns>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks? userData.savedBooks.map((book) => {
             return (
               <Card key={book.bookId} border='dark'>
                 {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
@@ -65,7 +65,7 @@ const SavedBooks = () => {
                 </Card.Body>
               </Card>
             );
-          })}
+          }):null}
         </CardColumns>
       </Container>
     </>

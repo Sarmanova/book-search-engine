@@ -13,7 +13,7 @@ const resolvers = {
     },
 
     Mutation: {
-        addUser: async ( parent, args, context) => {
+        addUser: async ( parent, args) => {
             console.log('WE Hit thE BacKEND1!1')
             const user = await User.create(args);
             const token = signToken(user);
@@ -42,9 +42,9 @@ const resolvers = {
             // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
             if (context.user) {
                 const userSaveBook = await User.findOneAndUpdate(
-                    { _id: userId },
+                    { _id: context.user._id },
                     {
-                        $push: { saveBooks: bookData },
+                        $push: { savedBooks: bookData},
                     },
                     {
                         new: true,
@@ -55,19 +55,12 @@ const resolvers = {
             // If user attempts to execute this mutation and isn't logged in, throw an error
             throw new AuthenticationError('You need to be logged in!');
         },
-        // // Set up mutation so a logged in user can only remove their profile and no one else's
-        //    removeBook: async (parent,{book_id}, context) => {
-        //       if (context.user) {
-        //         const removeBook = await  User.findOneAndDelete({ _id: context.user._id });
-        //        }
-        //      throw new AuthenticationError('You need to be logged in!');
-        //     },
-        // // Make it so a logged in user can only remove a skill from their own profile
-        removeBook: async (parent, { book_id }, context) => {
+        
+        removeBook: async (parent, {bookId}, context) => {
             if (context.user) {
                 const removeBook = await User.findOneAndDelete(
                     { _id: context.user._id },
-                    { $pull: { saveBooks: book_id }, },
+                    { $pull: { savedBooks: { bookId: bookId } }},
                     { new: true }
                 ); return removeBook
             }
