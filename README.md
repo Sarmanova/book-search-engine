@@ -14,9 +14,11 @@ AS AN avid reader
 I WANT to search for new books to read
 SO THAT I can keep a list of books to purchase
 ```
+## ScreenShot
+<img src="https://s3.amazonaws.com/shecodesio-production/uploads/files/000/016/461/original/screenshot-book.jpg?1630556527">
 
 
-## Acceptance Criteria
+## Description
 
 ```md
 GIVEN a book search engine
